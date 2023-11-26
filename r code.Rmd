@@ -1,0 +1,82 @@
+---
+title: "Niwantha's Assignment"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: "2023-11-24"
+---
+```{r}
+#install.packages("bayesm")
+```
+
+
+```{r}
+
+library(bayesm)
+set.seed(123)
+# Actual dataset (replace this with your data)
+heights <- c(165, 168, 172, 160, 175, 170, 155, 168, 180, 162)
+
+# Bayesian analysis
+n <- length(heights)
+prior_mean <- 160
+prior_std <- 10
+
+# Prior distribution
+prior <- rnorm(10000, mean = prior_mean, sd = prior_std)
+
+# Clip values to be between 100 and 200
+prior <- pmax(pmin(prior, 200), 100)
+
+# Likelihood parameters
+likelihood_mean <- mean(heights)
+likelihood_std <- sd(heights)
+
+# Posterior calculation
+posterior_mean <- (prior_mean / prior_std^2 + sum(heights) / likelihood_std^2) / (1 / prior_std^2 + n / likelihood_std^2)
+posterior_std <- 1 / sqrt(1 / prior_std^2 + n / likelihood_std^2)
+
+# Generate posterior samples
+posterior <- rnorm(10000, mean = posterior_mean, sd = posterior_std)
+posterior <- pmax(pmin(posterior, 200), 100)
+
+```
+```{r}
+# Generate some example data for three distributions
+data1 <- heights
+data2 <- prior
+data3 <- posterior
+
+# Determine the range of values for x-axis
+x_range <- range(c(data1, data2, data3))
+
+# Create a line plot for the three distributions
+plot(density(data1), col = "blue", main = "Line Plot of Three Distributions", xlab = "Values", ylab = "Density", xlim = x_range)
+lines(density(data2), col = "red")
+lines(density(data3), col = "green")
+
+# Add a legend
+legend("topright", legend = c("heights", "prior", "posterior"), col = c("blue", "red", "green"), lty = 1)
+
+```
+
+```{r}
+# Generate some example data for three distributions
+data1 <- heights
+data2 <- prior
+data3 <- posterior
+
+# Determine the range of values for x-axis
+x_range <- range(c(data1, data2, data3))
+
+# Create a line plot for the three distributions
+plot(density(data1), col = "blue", main = "Line Plot of Three Distributions", xlab = "Values", ylab = "Density", xlim = x_range, ylim = c(0, 0.2))
+lines(density(data2), col = "red")
+lines(density(data3), col = "green")
+
+# Add a legend
+legend("topright", legend = c("heights", "prior", "posterior"), col = c("blue", "red", "green"), lty = 1)
+
+```
+
